@@ -1,6 +1,8 @@
 services:
-  # Base configuration to be extended
-  base-config:
+  # Hub services for different platforms and versions (put these first since they're what we'll actually use)
+  crawl4ai-hub-amd64:
+    image: unclecode/crawl4ai:${VERSION:-basic}-amd64
+    profiles: ["hub-amd64"]
     ports:
       - "11235:11235"
       - "8000:8000"
@@ -26,6 +28,12 @@ services:
       retries: 3
       start_period: 40s
 
+  crawl4ai-hub-arm64:
+    image: unclecode/crawl4ai:${VERSION:-basic}-arm64
+    profiles: ["hub-arm64"]
+    extends:
+      service: crawl4ai-hub-amd64
+
   # Local build services for different platforms
   crawl4ai-amd64:
     build:
@@ -38,9 +46,8 @@ services:
       platforms:
         - linux/amd64
     profiles: ["local-amd64"]
-    extends: &base-config
-      file: docker-compose.yml
-      service: base-config
+    extends:
+      service: crawl4ai-hub-amd64
 
   crawl4ai-arm64:
     build:
@@ -53,15 +60,5 @@ services:
       platforms:
         - linux/arm64
     profiles: ["local-arm64"]
-    extends: *base-config
-
-  # Hub services for different platforms and versions
-  crawl4ai-hub-amd64:
-    image: unclecode/crawl4ai:${VERSION:-basic}-amd64
-    profiles: ["hub-amd64"]
-    extends: *base-config
-
-  crawl4ai-hub-arm64:
-    image: unclecode/crawl4ai:${VERSION:-basic}-arm64
-    profiles: ["hub-arm64"]
-    extends: *base-config
+    extends:
+      service: crawl4ai-hub-amd64
