@@ -1,5 +1,4 @@
 services:
-  # Hub services for different platforms and versions (put these first since they're what we'll actually use)
   crawl4ai-hub-amd64:
     image: unclecode/crawl4ai:${VERSION:-basic}-amd64
     profiles: ["hub-amd64"]
@@ -27,38 +26,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  crawl4ai-hub-arm64:
-    image: unclecode/crawl4ai:${VERSION:-basic}-arm64
-    profiles: ["hub-arm64"]
-    extends:
-      service: crawl4ai-hub-amd64
-
-  # Local build services for different platforms
-  crawl4ai-amd64:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        PYTHON_VERSION: "3.10"
-        INSTALL_TYPE: ${INSTALL_TYPE:-basic}
-        ENABLE_GPU: false
-      platforms:
-        - linux/amd64
-    profiles: ["local-amd64"]
-    extends:
-      service: crawl4ai-hub-amd64
-
-  crawl4ai-arm64:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        PYTHON_VERSION: "3.10"
-        INSTALL_TYPE: ${INSTALL_TYPE:-basic}
-        ENABLE_GPU: false
-      platforms:
-        - linux/arm64
-    profiles: ["local-arm64"]
-    extends:
-      service: crawl4ai-hub-amd64
