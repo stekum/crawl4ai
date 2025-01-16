@@ -1,3 +1,7 @@
+# Video Demo for the implementation: 
+
+https://www.youtube.com/watch?v=hdSwyAZeWXo
+
 # 🚀🤖 Crawl4AI: Open-source LLM Friendly Web Crawler & Scraper.
 
 <div align="center">
